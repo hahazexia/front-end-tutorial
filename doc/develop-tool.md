@@ -98,8 +98,20 @@ vscode支持 win、mac、linux 三种平台。
   <img alt="VS Code in action" src="../img/search-in-project.gif">
 </p>
 
-- 在文件夹中查找任意字符，在资源管理器面板中的某个文件夹上右键点击，在出现的右键菜单中选择`在文件夹中查找`选项，然后输入想要搜索的字符即可
+- 在文件夹中查找任意字符，在资源管理器面板中的某个文件夹上右键点击，在出现的右键菜单中选择**在文件夹中查找**选项，然后输入想要搜索的字符即可
 
 <p align="center">
   <img alt="VS Code in action" src="../img/search-in-folder.gif">
 </p>
+
+## emmet插件
+
+vscode已经集成了emmet插件这个强大的工具，这个插件专门为了加快web开发速度而生，可以使用特定的语法快速生成代码片段。
+
+这里只提一下它的感叹号语法，可以快速生成一个html页面的基础结构，其他插件语法请自己去[emmet官网](https://docs.emmet.io/)查看文档。
+
+<p align="center">
+  <img alt="VS Code in action" src="../img/emmet-exclamatory-mark.gif">
+</p>
+
+如上图所示，只需要在html文件中输入一个感叹号`!`，然后再按一下`tab`键即可生成一个简单的页面结构。
