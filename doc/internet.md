@@ -163,3 +163,54 @@ HTTP 是一种面向无连接的基于本文的协议。客户端（浏览器）
 大多数因特网协议被请求意见稿（Request For Comments，RFC）所定义，请求意见稿是是由互联网工程任务组（IETF）发布的一系列备忘录。HTTP 1.0 版本被 RFC 1945 所定义。
 
 ### 应用层协议：SMTP 和电子邮件
+
+另外一种普遍使用的互联网服务就是电子邮件。E-mail 使用应用层协议称之为简易邮件传输协议也叫 SMTP。SMTP也是一种基于文本的协议，但是不像 HTTP，SMTP 是面向连接的。SMTP 协议也比 HTTP 协议要复杂得多。与 HTTP 相比，SMTP 中有更多的命令和要考虑的东西。
+
+当你打开你的邮件客户端阅读邮件的时候，通常会发生下面的事情：
+
+1. 邮件客户端（Netscape Mail, Lotus Notes, Microsoft Outlook等等）打开一个连接到默认的邮件服务器。邮件服务器的 IP 地址或者域名一般在客户端安装的时候就已经被设置好了。
+2. 邮件服务器将会总是发送第一次消息来确定自己的身份。
+3. 客户端会发送一个 SMTP HELO 命令到服务器，然后服务器返回一个 250 OK 消息作为响应。
+4. 取决于是否客户端正在检查邮件或者发送邮件等等动作。相应的合适的 SMTP 命令就会被发送至服务器，服务器接着返回响应。
+5. 这种请求／响应的事务会持续下去直到客户端发出一个 SMTP QUIT 命令。服务器会响应一句goodbye然后连接被关闭。
+
+下面展示了一个 SMTP 客户端和一个 SMTP 服务器之间的简单的对话。R代表服务器返回的响应，S代表客户端发送的消息。
+
+```
+  This SMTP example shows mail sent by Smith at host USC-ISIF, to
+  Jones, Green, and Brown at host BBN-UNIX.  Here we assume that
+  host USC-ISIF contacts host BBN-UNIX directly.  The mail is
+  accepted for Jones and Brown.  Green does not have a mailbox at
+  host BBN-UNIX.
+
+  -------------------------------------------------------------
+
+  R: 220 BBN-UNIX.ARPA Simple Mail Transfer Service Ready
+  S: HELO USC-ISIF.ARPA
+  R: 250 BBN-UNIX.ARPA
+
+  S: MAIL FROM:<Smith@USC-ISIF.ARPA>
+  R: 250 OK
+
+  S: RCPT TO:<Jones@BBN-UNIX.ARPA>
+  R: 250 OK
+
+  S: RCPT TO:<Green@BBN-UNIX.ARPA>
+  R: 550 No such user here
+
+  S: RCPT TO:<Brown@BBN-UNIX.ARPA>
+  R: 250 OK
+
+  S: DATA
+  R: 354 Start mail input; end with <CRLF>.<CRLF>
+  S: Blah blah blah...
+  S: ...etc. etc. etc.
+  S: .
+  R: 250 OK
+
+  S: QUIT
+  R: 221 BBN-UNIX.ARPA Service closing transmission channel
+```
+
+这种 SMTP 事务采取自标准 RFC 821，指定了 SMTP 标准。
+
