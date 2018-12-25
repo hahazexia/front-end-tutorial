@@ -261,3 +261,30 @@ TCP 不是一种文本协议。TCP 是一种**面向连接**的，可靠的，�
 </table>
 
 ### 因特网协议（IP）
+ 
+与 TCP 不同，IP 协议是一种不可靠的，无连接的协议。IP 协议从来不关心一个数据包是否正常抵达了目的地。IP 协议也不知道关于连接和端口号的信息。IP 协议的任务就是按照正确路线发送数据包到其他电脑。IP 数据包是独立实体，可能它抵达目的地的时候的次序完全是乱的。确保数据抵达目的地并且能按照正常顺序组合是 TCP 协议做的事。只有一件事对于 IP 和 TCP 协议是一样的，那就是 IP 协议也会往接收到的数据中添加头部信息。IP 头部看起来像下面这样：
+
+<p align="center">
+  <img alt="internet" src="../img/internet8.gif">
+</p>
+<p align="center"><span>图8</span></p>
+
+如上图我们可以发现在 IP 头部中存在发送者和接收者的 IP 地址。下面的图是一个数据包经过应用层处理后看起来的样子，TCP 层和 IP 层。在 TCP 层中的数据被分割，然后加上 TCP 头部，然后数据包到了 IP 层，IP 头部被添加，接着才会被传输。
+
+<p align="center">
+  <img alt="internet" src="../img/internet9.gif">
+</p>
+<p align="center"><span>图9</span></p>
+
+## 总结
+
+现在你大概了解了因特网是如何工作的了。自从作为美国的国防部研究项目开始一直到现在，因特网已经走了很长一段的路了。没有人会知道它未来的模样。但有一点是真的。因特网会将整个世界联合在一起。信息时代如今正在大步向前进发，未来，谁知道呢？
+
+## 参考文献
+
+本文翻译自[How Does the Internet Work?](http://web.stanford.edu/class/msande91si/www-spr04/readings/week1/InternetWhitepaper.htm)
+
+下面是其他参考资料：
+
+* [How the Web works](https://developer.mozilla.org/en-US/docs/Learn/Getting_started_with_the_web/How_the_Web_works)
+* [How does the Internet work?](https://developer.mozilla.org/en-US/docs/Learn/Common_questions/How_does_the_Internet_work)
