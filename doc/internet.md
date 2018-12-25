@@ -288,3 +288,4 @@ TCP 不是一种文本协议。TCP 是一种**面向连接**的，可靠的，�
 
 * [How the Web works](https://developer.mozilla.org/en-US/docs/Learn/Getting_started_with_the_web/How_the_Web_works)
 * [How does the Internet work?](https://developer.mozilla.org/en-US/docs/Learn/Common_questions/How_does_the_Internet_work)
+* [What is the Internet?(youtube)](https://www.youtube.com/watch?v=Dxcc6ycZ73M)
