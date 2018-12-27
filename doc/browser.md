@@ -496,7 +496,7 @@ if (!m_currentFormElement) {
 
 代码的注释已经说得很清楚了。
 
-> 示例网站 www.liceo.edu.mx 嵌套了约 1500 个标记，全都来自一堆 <b> 标记。我们只允许最多 20 层同类型标记的嵌套，如果再嵌套更多，就会全部忽略。
+> 示例网站 www.liceo.edu.mx 嵌套了约 1500 个标记，全都来自一堆 `<b>` 标记。我们只允许最多 20 层同类型标记的嵌套，如果再嵌套更多，就会全部忽略。
 
 ```
 bool HTMLParser::allowNestedRedundantTag(const AtomicString& tagName)
