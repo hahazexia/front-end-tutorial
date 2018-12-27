@@ -369,3 +369,159 @@ DOM 与标记之间几乎是一一对应的关系。比如下面这段标记：
 
 ##### 树构建算法
 
+在创建解析器的同时，也会创建 Document 对象。在树构建阶段，以 Document 为根节点的 DOM 树也会不断进行修改，向其中添加各种元素。标记生成器发送的每个节点都会由树构建器进行处理。规范中定义了每个标记所对应的 DOM 元素，这些元素会在接收到相应的标记时创建。这些元素不仅会添加到 DOM 树中，还会添加到开放元素的堆栈中。此堆栈用于纠正嵌套错误和处理未关闭的标记。其算法也可以用状态机来描述。这些状态称为“插入模式”。
+
+让我们来看看示例输入的树构建过程：
+
+```html
+<html>
+  <body>
+    Hello world
+  </body>
+</html>
+```
+
+树构建阶段的输入是一个来自标记化阶段的标记序列。第一个模式是“initial mode”。接收 HTML 标记后转为“before html”模式，并在这个模式下重新处理此标记。这样会创建一个 HTMLHtmlElement 元素，并将其附加到 Document 根对象上。
+
+然后状态将改为“before head”。此时我们接收“body”标记。即使我们的示例中没有“head”标记，系统也会隐式创建一个 HTMLHeadElement，并将其添加到树中。
+
+现在我们进入了“in head”模式，然后转入“after head”模式。系统对 body 标记进行重新处理，创建并插入 HTMLBodyElement，同时模式转变为“in body”。
+
+现在，接收由“Hello world”字符串生成的一系列字符标记。接收第一个字符时会创建并插入“Text”节点，而其他字符也将附加到该节点。
+
+接收 body 结束标记会触发“after body”模式。现在我们将接收 HTML 结束标记，然后进入“after after body”模式。接收到文件结束标记后，解析过程就此结束。
+
+<p align="center">
+  <img alt="internet" src="../img/browser12.gif">
+</p>
+<p align="center"><span>示例 HTML 的树构建</span></p>
+
+##### 解析结束后的操作
+
+在此阶段，浏览器会将文档标注为交互状态，并开始解析那些处于“deferred”模式的脚本，也就是那些应在文档解析完成后才执行的脚本。然后，文档状态将设置为“完成”，一个“加载”事件将随之触发。
+
+您可以[在 HTML5 规范中查看标记化和树构建的完整算法](http://www.w3.org/TR/html5/syntax.html#html-parser)。
+
+##### 浏览器的容错机制
+
+您在浏览 HTML 网页时从来不会看到“语法无效”的错误。这是因为浏览器会纠正任何无效内容，然后继续工作。
+
+以下面的 HTML 代码为例：
+
+```html
+<html>
+  <mytag>
+  </mytag>
+  <div>
+  <p>
+  </div>
+    Really lousy HTML
+  </p>
+</html>
+```
+在这里，我已经违反了很多语法规则（“mytag”不是标准的标记，“p”和“div”元素之间的嵌套有误等等），但是浏览器仍然会正确地显示这些内容，并且毫无怨言。因为有大量的解析器代码会纠正 HTML 网页作者的错误。
+
+不同浏览器的错误处理机制相当一致，但令人称奇的是，这种机制并不是 HTML 当前规范的一部分。和书签管理以及前进/后退按钮一样，它也是浏览器在多年发展中的产物。很多网站都普遍存在着一些已知的无效 HTML 结构，每一种浏览器都会尝试通过和其他浏览器一样的方式来修复这些无效结构。
+
+HTML5 规范定义了一部分这样的要求。WebKit 在 HTML 解析器类的开头注释中对此做了很好的概括。
+
+> 解析器对标记化输入内容进行解析，以构建文档树。如果文档的格式正确，就直接进行解析。
+> 遗憾的是，我们不得不处理很多格式错误的 HTML 文档，所以解析器必须具备一定的容错性。
+> 我们至少要能够处理以下错误情况：
+> 1. 明显不能在某些外部标记中添加的元素。在此情况下，我们应该关闭所有标记，直到出现禁止添加的元素，然后再加入该元素。
+> 1. 我们不能直接添加的元素。这很可能是网页作者忘记添加了其中的一些标记（或者其中的标记是可选的）。这些标签可能包括：HTML 1. HEAD BODY TBODY TR TD LI（还有遗漏的吗？）。
+> 1. 向 inline 元素内添加 block 元素。关闭所有 inline 元素，直到出现下一个较高级的 block 元素。
+> 1. 如果这样仍然无效，可关闭所有元素，直到可以添加元素为止，或者忽略该标记。
+
+让我们看一些 WebKit 容错的示例：
+
+###### 使用了 </br> 而不是 <br>
+
+有些网站使用了 `</br>` 而不是 `<br>`。为了与 IE 和 Firefox 兼容，WebKit 将其与 `<br>` 做同样的处理。 
+代码如下：
+
+```
+if (t->isCloseTag(brTag) && m_document->inCompatMode()) {
+     reportError(MalformedBRError);
+     t->beginTag = true;
+}
+```
+请注意，错误处理是在内部进行的，用户并不会看到这个过程。
+
+###### 离散表格
+
+离散表格是指位于其他表格内容中，但又不在任何一个单元格内的表格。
+比如以下的示例：
+
+```html
+<table>
+    <table>
+        <tr><td>inner table</td></tr>
+    </table>
+    <tr><td>outer table</td></tr>
+</table>
+```
+WebKit 会将其层次结构更改为两个同级表格：
+
+```html
+<table>
+    <tr><td>outer table</td></tr>
+</table>
+<table>
+    <tr><td>inner table</td></tr>
+</table>
+```
+
+代码如下：
+
+```
+if (m_inStrayTableContent && localName == tableTag)
+        popBlock(tableTag);
+```
+
+WebKit 使用一个堆栈来保存当前的元素内容，它会从外部表格的堆栈中弹出内部表格。现在，这两个表格就变成了同级关系。
+
+###### 嵌套的表单元素
+
+如果用户在一个表单元素中又放入了另一个表单，那么第二个表单将被忽略。 
+代码如下：
+
+```
+if (!m_currentFormElement) {
+        m_currentFormElement = new HTMLFormElement(formTag,    m_document);
+}
+```
+
+###### 过于复杂的标记层次结构
+
+代码的注释已经说得很清楚了。
+
+> 示例网站 www.liceo.edu.mx 嵌套了约 1500 个标记，全都来自一堆 <b> 标记。我们只允许最多 20 层同类型标记的嵌套，如果再嵌套更多，就会全部忽略。
+
+```
+bool HTMLParser::allowNestedRedundantTag(const AtomicString& tagName)
+{
+
+unsigned i = 0;
+for (HTMLStackElem* curr = m_blockStack;
+         i < cMaxRedundantTagDepth && curr && curr->tagName == tagName;
+     curr = curr->next, i++) { }
+return i != cMaxRedundantTagDepth;
+}
+```
+
+###### 放错位置的 html 或者 body 结束标记
+
+同样，代码的注释已经说得很清楚了。
+
+> 支持格式非常糟糕的 HTML 代码。我们从不关闭 body 标记，因为一些愚蠢的网页会在实际文档结束之前就关闭。我们通过调用 end() 来执行关闭操作。
+
+```
+if (t->tagName == htmlTag || t->tagName == bodyTag )
+        return;
+```
+
+所以网页作者需要注意，除非您想作为反面教材出现在 WebKit 容错代码段的示例中，否则还请编写格式正确的 HTML 代码。
+
+#### CSS 解析
+
