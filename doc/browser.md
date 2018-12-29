@@ -12,7 +12,7 @@
 *注：浏览器引擎是每一个浏览器的核心组件。它的首要任务是将 HTML 文档和其他网页资源转换成可交互的视觉表现，然后呈现在用户的设备上。*
 
 <p align="center">
-  <img alt="internet" src="../img/browser1.png">
+  <img alt="2017年11月至2018年11月全球浏览器市场份额" src="../img/browser1.png">
 </p>
 <p align="center"><span>2017年11月至2018年11月全球浏览器市场份额</span></p>
 
@@ -75,7 +75,7 @@
 1. **数据存储**。这是持久层。浏览器需要在硬盘上保存各种数据，例如 Cookie。新的 HTML 规范 (HTML5) 定义了“网络数据库”，这是一个完整（但是轻便）的浏览器内数据库。
 
 <p align="center">
-  <img alt="internet" src="../img/browser2.png">
+  <img alt="浏览器主要组件" src="../img/browser2.png">
 </p>
 <p align="center"><span>浏览器主要组件</span></p>
 
@@ -98,7 +98,7 @@
 然后进行如下所示的基本流程：
 
 <p align="center">
-  <img alt="internet" src="../img/browser3.png">
+  <img alt="呈现引擎的基本流程" src="../img/browser3.png">
 </p>
 <p align="center"><span>呈现引擎的基本流程</span></p>
 
@@ -113,12 +113,12 @@
 #### 主流程示例
 
 <p align="center">
-  <img alt="internet" src="../img/browser4.png">
+  <img alt="WebKit 主流程" src="../img/browser4.png">
 </p>
 <p align="center"><span>WebKit 主流程</span></p>
 
 <p align="center">
-  <img alt="internet" src="../img/browser5.jpg">
+  <img alt="Mozilla 的 Gecko 呈现引擎主流程" src="../img/browser5.jpg">
 </p>
 <p align="center"><span>Mozilla 的 Gecko 呈现引擎主流程</span></p>
 
@@ -137,7 +137,7 @@ Gecko 将视觉格式化元素组成的树称为“框架树”。每个元素�
 示例 - 解析 2 + 3 - 1 这个表达式，会返回下面的树：
 
 <p align="center">
-  <img alt="internet" src="../img/browser6.png">
+  <img alt="数学表达式树节点" src="../img/browser6.png">
 </p>
 <p align="center"><span>数学表达式树节点</span></p>
 
@@ -156,7 +156,7 @@ Gecko 将视觉格式化元素组成的树称为“框架树”。每个元素�
 解析器通常将解析工作分给以下两个组件来处理：**词法分析器**（有时也称为标记生成器），负责将输入内容分解成一个个有效标记；而**解析器**负责根据语言的语法规则分析文档的结构，从而构建解析树。词法分析器知道如何将无关的字符（比如空格和换行符）分离出来。
 
 <p align="center">
-  <img alt="internet" src="../img/browser7.png">
+  <img alt="从源文档到解析树" src="../img/browser7.png">
 </p>
 <p align="center"><span>从源文档到解析树</span></p>
 
@@ -169,7 +169,7 @@ Gecko 将视觉格式化元素组成的树称为“框架树”。每个元素�
 很多时候，解析树还不是最终产品。解析通常是在翻译过程中使用的，而**翻译**是指将输入文档转换成另一种格式。编译就是这样一个例子。编译器可将源代码编译成机器代码，具体过程是首先将源代码解析成解析树，然后将解析树翻译成机器代码文档。
 
 <p align="center">
-  <img alt="internet" src="../img/browser8.png">
+  <img alt="编译流程" src="../img/browser8.png">
 </p>
 <p align="center"><span>编译流程</span></p>
 
@@ -311,7 +311,7 @@ DOM 与标记之间几乎是一一对应的关系。比如下面这段标记：
 可翻译成如下的 DOM 树：
 
 <p align="center">
-  <img alt="internet" src="../img/browser9.png">
+  <img alt="示例标记的 DOM 树" src="../img/browser9.png">
 </p>
 <p align="center"><span>示例标记的 DOM 树</span></p>
 
@@ -338,7 +338,7 @@ DOM 与标记之间几乎是一一对应的关系。比如下面这段标记：
 标记生成器识别标记，传递给树构造器，然后接受下一个字符以识别下一个标记；如此反复直到输入的结束。
 
 <p align="center">
-  <img alt="internet" src="../img/browser10.png">
+  <img alt="HTML 解析流程（摘自 HTML5 规范）" src="../img/browser10.png">
 </p>
 <p align="center"><span>HTML 解析流程（摘自 HTML5 规范）</span></p>
 
@@ -356,14 +356,14 @@ DOM 与标记之间几乎是一一对应的关系。比如下面这段标记：
 </html>
 ```
 
-初始状态是数据状态。遇到字符 < 时，状态更改为“标记打开状态”。接收一个 a-z 字符会创建“起始标记”，状态更改为“标记名称状态”。这个状态会一直保持到接收 > 字符。在此期间接收的每个字符都会附加到新的标记名称上。在本例中，我们创建的标记是 html 标记。
+初始状态是数据状态。遇到字符 `<` 时，状态更改为“标记打开状态”。接收一个 a-z 字符会创建“起始标记”，状态更改为“标记名称状态”。这个状态会一直保持到接收 `>` 字符。在此期间接收的每个字符都会附加到新的标记名称上。在本例中，我们创建的标记是 html 标记。
 
-遇到 > 标记时，会发送当前的标记，状态改回“数据状态”。<body> 标记也会进行同样的处理。目前 html 和 body 标记均已发出。现在我们回到“数据状态”。接收到 Hello world 中的 H 字符时，将创建并发送字符标记，直到接收 </body> 中的 <。我们将为 Hello world 中的每个字符都发送一个字符标记。
+遇到 `>` 标记时，会发送当前的标记，状态改回“数据状态”。`<body>` 标记也会进行同样的处理。目前 html 和 body 标记均已发出。现在我们回到“数据状态”。接收到 Hello world 中的 H 字符时，将创建并发送字符标记，直到接收 `</body>` 中的 `<`。我们将为 Hello world 中的每个字符都发送一个字符标记。
 
-现在我们回到“标记打开状态”。接收下一个输入字符 / 时，会创建 end tag token 并改为“标记名称状态”。我们会再次保持这个状态，直到接收 >。然后将发送新的标记，并回到“数据状态”。</html> 输入也会进行同样的处理。
+现在我们回到“标记打开状态”。接收下一个输入字符 / 时，会创建 end tag token 并改为“标记名称状态”。我们会再次保持这个状态，直到接收 `>`。然后将发送新的标记，并回到“数据状态”。`</html>` 输入也会进行同样的处理。
 
 <p align="center">
-  <img alt="internet" src="../img/browser11.png">
+  <img alt="对示例输入进行标记化" src="../img/browser11.png">
 </p>
 <p align="center"><span>对示例输入进行标记化</span></p>
 
@@ -392,7 +392,7 @@ DOM 与标记之间几乎是一一对应的关系。比如下面这段标记：
 接收 body 结束标记会触发“after body”模式。现在我们将接收 HTML 结束标记，然后进入“after after body”模式。接收到文件结束标记后，解析过程就此结束。
 
 <p align="center">
-  <img alt="internet" src="../img/browser12.gif">
+  <img alt="示例 HTML 的树构建" src="../img/browser12.gif">
 </p>
 <p align="center"><span>示例 HTML 的树构建</span></p>
 
@@ -524,4 +524,93 @@ if (t->tagName == htmlTag || t->tagName == bodyTag )
 所以网页作者需要注意，除非您想作为反面教材出现在 WebKit 容错代码段的示例中，否则还请编写格式正确的 HTML 代码。
 
 #### CSS 解析
+
+还记得简介中解析的概念吗？和 HTML 不同，CSS 是上下文无关的语法，可以使用简介中描述的各种解析器进行解析。事实上，CSS 规范定义了 CSS 的词法和语法。
+
+让我们来看一些示例： 
+词法语法（词汇）是针对各个标记用正则表达式定义的：
+
+* comment   \/\*[^*]*\*+([^/*][^*]*\*+)*\/
+* num   [0-9]+|[0-9]*"."[0-9]+
+* nonascii  [\200-\377]
+* nmstart   [_a-z]|{nonascii}|{escape}
+* nmchar    [_a-z0-9-]|{nonascii}|{escape}
+* name    {nmchar}+
+* ident   {nmstart}{nmchar}*
+
+“ident”是标识符 (identifier) 的缩写，比如类名。“name”是元素的 ID（通过“#”来引用）。
+
+语法是采用 BNF 格式描述的。
+
+```
+ruleset
+  : selector [ ',' S* selector ]*
+    '{' S* declaration [ ';' S* declaration ]* '}' S*
+  ;
+selector
+  : simple_selector [ combinator selector | S+ [ combinator? selector ]? ]?
+  ;
+simple_selector
+  : element_name [ HASH | class | attrib | pseudo ]*
+  | [ HASH | class | attrib | pseudo ]+
+  ;
+class
+  : '.' IDENT
+  ;
+element_name
+  : IDENT | '*'
+  ;
+attrib
+  : '[' S* IDENT S* [ [ '=' | INCLUDES | DASHMATCH ] S*
+    [ IDENT | STRING ] S* ] ']'
+  ;
+pseudo
+  : ':' [ IDENT | FUNCTION S* [IDENT S*] ')' ]
+  ;
+```
+
+解释：这是一个规则集的结构：
+
+```css
+div.error , a.error {
+  color:red;
+  font-weight:bold;
+}
+```
+
+div.error 和 a.error 是选择器。大括号内的部分包含了由此规则集应用的规则。此结构的正式定义是这样的：
+
+```
+ruleset
+  : selector [ ',' S* selector ]*
+    '{' S* declaration [ ';' S* declaration ]* '}' S*
+  ;
+```
+
+这表示一个规则集就是一个选择器，或者由逗号和空格（S 表示空格）分隔的多个（数量可选）选择器。规则集包含了大括号，以及其中的一个或多个（数量可选）由分号分隔的声明。“声明”和“选择器”将由下面的 BNF 格式定义。
+
+##### WebKit CSS 解析器
+
+WebKit 使用 Flex 和 Bison 解析器生成器，通过 CSS 语法文件自动创建解析器。正如我们之前在解析器简介中所说，Bison 会创建自下而上的移位归约解析器。Firefox 使用的是人工编写的自上而下的解析器。这两种解析器都会将 CSS 文件解析成 StyleSheet 对象，且每个对象都包含 CSS 规则。CSS 规则对象则包含选择器和声明对象，以及其他与 CSS 语法对应的对象。
+
+<p align="center">
+  <img alt="解析css" src="../img/browser13.png">
+</p>
+<p align="center"><span>解析css</span></p>
+
+#### 处理脚本和样式表的顺序
+
+##### 脚本
+
+网络的模型是同步的。网页作者希望解析器遇到 `<script>` 标记时立即解析并执行脚本。文档的解析将停止，直到脚本执行完毕。如果脚本是外部的，那么解析过程会停止，直到从网络同步抓取资源完成后再继续。此模型已经使用了多年，也在 HTML4 和 HTML5 规范中进行了指定。作者也可以将脚本标注为“defer”，这样它就不会停止文档解析，而是等到解析结束才执行。HTML5 增加了一个选项，可将脚本标记为异步，以便由其他线程解析和执行。
+
+##### 预解析
+
+WebKit 和 Firefox 都进行了这项优化。在执行脚本时，其他线程会解析文档的其余部分，找出并加载需要通过网络加载的其他资源。通过这种方式，资源可以在并行连接上加载，从而提高总体速度。请注意，预解析器不会修改 DOM 树，而是将这项工作交由主解析器处理；预解析器只会解析外部资源（例如外部脚本、样式表和图片）的引用。
+
+##### 样式表
+
+另一方面，样式表有着不同的模型。理论上来说，应用样式表不会更改 DOM 树，因此似乎没有必要等待样式表并停止文档解析。但这涉及到一个问题，就是脚本在文档解析阶段会请求样式信息。如果当时还没有加载和解析样式，脚本就会获得错误的回复，这样显然会产生很多问题。这看上去是一个非典型案例，但事实上非常普遍。Firefox 在样式表加载和解析的过程中，会禁止所有脚本。而对于 WebKit 而言，仅当脚本尝试访问的样式属性可能受尚未加载的样式表影响时，它才会禁止该脚本。
+
+### 呈现树构建
 
