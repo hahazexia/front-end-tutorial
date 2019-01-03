@@ -614,3 +614,81 @@ WebKit 和 Firefox 都进行了这项优化。在执行脚本时，其他线程�
 
 ### 呈现树构建
 
+在 DOM 树构建的同时，浏览器还会构建另一个树结构：呈现树。这是由可视化元素按照其显示顺序而组成的树，也是文档的可视化表示。它的作用是让您按照正确的顺序绘制内容。
+
+Firefox 将呈现树中的元素称为“框架”。WebKit 使用的术语是呈现器或呈现对象。 
+呈现器知道如何布局并将自身及其子元素绘制出来。 
+WebKits RenderObject 类是所有呈现器的基类，其定义如下：
+
+```
+class RenderObject{
+  virtual void layout();
+  virtual void paint(PaintInfo);
+  virtual void rect repaintRect();
+  Node* node;  //the DOM node
+  RenderStyle* style;  // the computed style
+  RenderLayer* containgLayer; //the containing z-index layer
+}
+```
+
+每一个呈现器都代表了一个矩形的区域，通常对应于相关节点的 CSS 框，这一点在 CSS2 规范中有所描述。它包含诸如宽度、高度和位置等几何信息。 
+框的类型会受到与节点相关的“display”样式属性的影响（请参阅样式计算章节）。下面这段 WebKit 代码描述了根据 display 属性的不同，针对同一个 DOM 节点应创建什么类型的呈现器。
+
+```
+RenderObject* RenderObject::createObject(Node* node, RenderStyle* style)
+{
+    Document* doc = node->document();
+    RenderArena* arena = doc->renderArena();
+    ...
+    RenderObject* o = 0;
+
+    switch (style->display()) {
+        case NONE:
+            break;
+        case INLINE:
+            o = new (arena) RenderInline(node);
+            break;
+        case BLOCK:
+            o = new (arena) RenderBlock(node);
+            break;
+        case INLINE_BLOCK:
+            o = new (arena) RenderBlock(node);
+            break;
+        case LIST_ITEM:
+            o = new (arena) RenderListItem(node);
+            break;
+       ...
+    }
+
+    return o;
+}
+```
+
+元素类型也是考虑因素之一，例如表单控件和表格都对应特殊的框架。 
+在 WebKit 中，如果一个元素需要创建特殊的呈现器，就会替换 createRenderer 方法。呈现器所指向的样式对象中包含了一些和几何无关的信息。
+
+#### 呈现树和 DOM 树的关系
+
+呈现器是和 DOM 元素相对应的，但并非一一对应。非可视化的 DOM 元素不会插入呈现树中，例如“head”元素。如果元素的 display 属性值为“none”，那么也不会显示在呈现树中（但是 visibility 属性值为“hidden”的元素仍会显示）。
+有一些 DOM 元素对应多个可视化对象。它们往往是具有复杂结构的元素，无法用单一的矩形来描述。例如，“select”元素有 3 个呈现器：一个用于显示区域，一个用于下拉列表框，还有一个用于按钮。如果由于宽度不够，文本无法在一行中显示而分为多行，那么新的行也会作为新的呈现器而添加。 
+另一个关于多呈现器的例子是格式无效的 HTML。根据 CSS 规范，inline 元素只能包含 block 元素或 inline 元素中的一种。如果出现了混合内容，则应创建匿名的 block 呈现器，以包裹 inline 元素。
+
+有一些呈现对象对应于 DOM 节点，但在树中所在的位置与 DOM 节点不同。浮动定位和绝对定位的元素就是这样，它们处于正常的流程之外，放置在树中的其他地方，并映射到真正的框架，而放在原位的是占位框架。
+
+<p align="center">
+  <img alt="解析css" src="../img/browser14.png">
+</p>
+<p align="center"><span>呈现树及其对应的 DOM 树 (3.1)。初始容器 block 为“viewport”，而在 WebKit 中则为“RenderView”对象。</span></p>
+
+#### 构建呈现树的流程
+
+在 Firefox 中，系统会针对 DOM 更新注册展示层，作为侦听器。展示层将框架创建工作委托给 FrameConstructor，由该构造器解析样式（请参阅样式计算）并创建框架。
+
+在 WebKit 中，解析样式和创建呈现器的过程称为“附加”。每个 DOM 节点都有一个“attach”方法。附加是同步进行的，将节点插入 DOM 树需要调用新的节点“attach”方法。
+
+处理 html 和 body 标记就会构建呈现树根节点。这个根节点呈现对象对应于 CSS 规范中所说的容器 block，这是最上层的 block，包含了其他所有 block。它的尺寸就是视口，即浏览器窗口显示区域的尺寸。Firefox 称之为 ViewPortFrame，而 WebKit 称之为 RenderView。这就是文档所指向的呈现对象。呈现树的其余部分以 DOM 树节点插入的形式来构建。
+
+请参阅[关于处理模型的 CSS2 规范](http://www.w3.org/TR/CSS21/intro.html#processing-model)。
+
+#### 样式计算
+
