@@ -7,6 +7,7 @@
 - [开发工具及环境](doc/develop-tool.md)
 - [互联网如何工作？](doc/internet.md)
 - [浏览器](doc/browser.md)
+- [DNS](doc/DNS.md)
 
 ## 版本许可
 
