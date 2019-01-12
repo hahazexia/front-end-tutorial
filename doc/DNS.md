@@ -403,3 +403,9 @@ dig example.com type257
 ## 总结
 
 现在你应该大致了解了 DNS 如何工作。一旦熟悉了策略那么普通的概念就相对容易理解，但是对于缺乏经验的开发者来说仍然有一些东西比较有难度，需要在实践中学习。
+
+## 参考文献
+
+* [An Introduction to DNS Terminology, Components, and Concepts](https://www.digitalocean.com/community/tutorials/an-introduction-to-dns-terminology-components-and-concepts)
+* [What is a domain name?](https://developer.mozilla.org/en-US/docs/Learn/Common_questions/What_is_a_domain_name)
+* [How DNS Works ](https://howdns.works/ep1/)
