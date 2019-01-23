@@ -172,3 +172,157 @@ CORS请求失败会产生错误，但是为了安全，在JavaScript代码层面
 
 下面使用一个例子来解释 CORS 的工作原理。这个例子使用 XMLHttpRequest 对象。
 
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Document</title>
+  <style>
+    .box {
+      padding: 30px;
+    }
+  </style>
+</head>
+<body>
+  <div class="box">
+    <button class="btn1">点击按钮发送跨域请求 跨域请求会成功</button>
+    <button class="btn2">点击按钮发送跨域请求2 跨域请求会失败</button>
+  </div>
+</body>
+<script src="axios.min.js"></script>
+<script>
+  var btn = document.querySelector('.btn1')
+  var btn2 = document.querySelector('.btn2')
+
+  btn.addEventListener('click', () => {
+    console.log('点击按钮发送跨域请求！')
+    
+    axios.post('http://localhost:3000/getSomeData', {}).then((response) => {
+      console.log(response, 'response')
+    }).catch((err) => {
+      console.log(err, 'err')
+    })
+  }, false)
+
+  btn2.addEventListener('click', () => {
+    console.log('点击按钮发送跨域请求！')
+    
+    axios.post('http://localhost:3000/getSomeData2', {}).then((response) => {
+      console.log(response, 'response')
+    }).catch((err) => {
+      console.log(err, 'err')
+    })
+  }, false)
+</script>
+</html>
+```
+
+下面是后台代码：
+
+```js
+const express = require('express')
+const bodyParser = require('body-parser')
+const morgan = require('morgan')
+
+const app = express()
+const router = express.Router()
+
+app.use(bodyParser.json())
+app.use(morgan('combined'))
+
+router.all('/getSomeData', (req, res, next) => {
+  //为路径为/getSomeData的请求设置允许跨域的请求头
+  res.header('Access-Control-Allow-Origin', '*')
+  res.header('Access-Control-Allow-Methods', 'POST')
+  res.header('Access-Control-Allow-Headers', 'Content-Type')
+  next()
+})
+
+router.post('/getSomeData', (req, res) => {
+  //url为/getSomeData设置了跨域请求头，因此跨域请求会成功
+  console.log('接收到请求！！\n')
+
+  return res.json({
+    name: 'zzx',
+    number: 1
+  })
+})
+
+router.post('/getSomeData2', (req, res) => {
+  //url为/getSomeData2没有设置跨域请求头，因此跨域请求会失败
+  console.log('接收到请求！！\n')
+
+  return res.json({
+    name: 'zzx',
+    number: 2
+  })
+})
+
+app.use('/', router)
+
+app.listen(3000, () => {
+  console.log(`Express server listening on port 3000 with pid ${process.pid}`)
+})
+```
+
+#### 预检请求
+
+上面的例子运行后会发现一个奇怪的现象：
+
+跨域成功的那个请求发送了两次，第一次是一个 OPTIONS 请求，第二次才是真正的 POST 请求。
+
+这个 OPTIONS 请求就是预检请求（preflighted request）。
+
+##### 什么时候会发起预检请求？
+
+当前请求涉及**跨域**，并且当前请求**不是一个简单请求**的时候，就会发起预检请求。
+
+##### 简单请求 和 非简单请求
+
+若请求满足所有下述条件，则该请求可视为**简单请求**：
+
+* 使用下列方法之一：GET  HEAD  POST
+* 必须是下面定义对 CORS 安全的首部字段集合，不能是集合之外的其他首部字段：
+  Accept  Accept-Language  Content-Language  DPR  Downlink  Save-Data  Viewport-Width  Width Content-Type （Content-Type需要注意额外的限制）
+* Content-Type 的值仅限于下列三者之一：
+  text/plain  multipart/form-data  application/x-www-form-urlencoded
+
+当请求满足下述任一条件时，则是**非简单请求**，即应首先发送**预检请求**：
+
+* 使用了下面任一 HTTP 方法： PUT  DELETE  CONNECT  OPTIONS  TRACE  PATCH
+* 设置了对 CORS 安全的首部字段集合**之外的**其他首部字段。该集合为：
+  Accept  Accept-Language  Content-Language  Content-Type (but note the additional requirements below)  DPR  Downlink  Save-Data  Viewport-Width  Width
+* Content-Type 的值不属于下列之一:
+  application/x-www-form-urlencoded  multipart/form-data  text/plain
+
+通过这样的对比原因就清除了，我们上面的例子里面的发送的跨域请求拥有 安全首部字段 之外的其他字段，比如 Accept 字段，并且 Content-Type 的值为 Content-Type: application/json。
+
+**因此例子中的请求不是简单请求，又因为处于跨域请求的状态下，所以会先发送 OPTIONS 预检请求判断后台程序是否设置了跨域头部。**
+
+**注意：**对于附带身份凭证的请求(即服务器设置Access-Control-Allow-Credentials: true)，服务器不得设置Access-Control-Allow-Origin 的值为“*”。否则请求将会失败。必须设置为具体的域名才能生效。
+
+#### 简单请求，非简单请求，带身份凭证的请求使用 CORS 图例
+
+<p align="center">
+  <img alt="简单请求" src="../img/HTTP2.png">
+</p>
+<p align="center"><span>简单请求 CORS</span></p>
+
+<p align="center">
+  <img alt="非简单请求 CORS 会先发起 预检请求" src="../img/HTTP3.png">
+</p>
+<p align="center"><span>非简单请求 CORS 会先发起 预检请求</span></p>
+
+<p align="center">
+  <img alt="带身份凭证的请求 CORS" src="../img/HTTP4.png">
+</p>
+<p align="center"><span>带身份凭证的请求 CORS</span></p>
+
+## WebSocket
+
+## 参考文献
+
+* [CORS MDN](https://developer.mozilla.org/zh-CN/docs/Web/HTTP/Access_control_CORS)

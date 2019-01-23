@@ -14,6 +14,14 @@ router.get('/', (req, res) => {
   return res.render('index')
 })
 
+router.post('/getSomeData', (req, res) => {
+  console.log('接收到请求！')
+  
+  return res.json({
+    port: 3005
+  })
+})
+
 app.use('/', router)
 
 app.listen(3005, () => {

@@ -13,17 +13,19 @@
 </head>
 <body>
   <div class="box">
-    <button class="btn1">点击按钮发送跨域请求</button>
-    <button class="btn2">点击按钮发送跨域请求2</button>
+    <button class="btn1">发送跨域请求1 跨域请求会成功</button>
+    <button class="btn2">发送跨域请求2 跨域请求会失败</button>
+    <button class="btn3">发送普通请求3 请求会成功</button>
   </div>
 </body>
 <script src="axios.min.js"></script>
 <script>
   var btn = document.querySelector('.btn1')
   var btn2 = document.querySelector('.btn2')
+  var btn3 = document.querySelector('.btn3')
 
   btn.addEventListener('click', () => {
-    console.log('点击按钮发送跨域请求！')
+    console.log('跨域请求1！')
     
     axios.post('http://localhost:3000/getSomeData', {}).then((response) => {
       console.log(response, 'response')
@@ -33,9 +35,19 @@
   }, false)
 
   btn2.addEventListener('click', () => {
-    console.log('点击按钮发送跨域请求！')
+    console.log('跨域请求2！')
     
     axios.post('http://localhost:3000/getSomeData2', {}).then((response) => {
+      console.log(response, 'response')
+    }).catch((err) => {
+      console.log(err, 'err')
+    })
+  }, false)
+
+  btn3.addEventListener('click', () => {
+    console.log('普通请求！')
+    
+    axios.post('http://localhost:3005/getSomeData', {}).then((response) => {
       console.log(response, 'response')
     }).catch((err) => {
       console.log(err, 'err')
