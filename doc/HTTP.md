@@ -59,6 +59,35 @@ HTTP/1.1 以及更早的 HTTP 协议报文都是语义可读的。在 HTTP/2 中
 
 3. **实体的主体部分**：该部分其实就是 HTTP 要传输的内容，是可选的。HTTP 报文可以承载很多类型的数字数据，比如，图片、视频、HTML 文档电子邮件、软件应用程序等等。
 
+#### HTTP 头部（也称为 HTTP 首部字段，）
+
+HTTP 消息头允许客户端和服务器通过 request 和 response 传递附加信息。一个请求头由名称（不区分大小写）后跟一个冒号“：”，冒号后跟具体的值（不带换行符）组成。该值前面的引导空白会被忽略。
+
+根据不同上下文，可将消息头分为：
+
+* 一般头: 同时适用于请求和响应消息，但与最终消息主体中传输的数据无关的消息头。
+* 请求头: 包含更多有关要获取的资源或客户端本身信息的消息头。
+* 响应头: 包含有关响应的补充信息，如其位置或服务器本身（名称和版本等）的消息头。
+* 实体头: 包含有关实体主体的更多信息，比如主体长(Content-Length)度或其MIME类型。
+
+下面是一个请求头的例子：
+
+```
+Accept: application/json, text/plain, */*
+Accept-Encoding: gzip, deflate, br
+Accept-Language: zh-CN,zh;q=0.9
+Connection: keep-alive
+Content-Length: 2
+Content-Type: application/json;charset=UTF-8
+Cookie: _ga=GA1.1.1821137291.1548063854
+Host: localhost:3005
+Origin: http://localhost:3005
+Referer: http://localhost:3005/
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/71.0.3578.98 Safari/537.36
+```
+
+HTTP Headers 种类特别多，请查看 MDN 文档寻找详细信息[HTTP Headers MDN](https://developer.mozilla.org/zh-CN/docs/Web/HTTP/Headers)。
+
 ## CORS
 
 CORS（Cross-Origin Resource Sharing）是跨域资源共享的意思，要理解它的含义，就要从浏览器的同源策略说起。
@@ -326,3 +355,4 @@ app.listen(3000, () => {
 ## 参考文献
 
 * [CORS MDN](https://developer.mozilla.org/zh-CN/docs/Web/HTTP/Access_control_CORS)
+* [HTTP Headers MDN](https://developer.mozilla.org/zh-CN/docs/Web/HTTP/Headers)
