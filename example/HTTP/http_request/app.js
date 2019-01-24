@@ -19,24 +19,6 @@ app.use(morgan('combined'))
 
 app.use(express.static(path.join(__dirname, './node_modules/axios/dist')));
 
-app.use((req, res, next) => {
-  if (req.method === 'POST') {
-    var busboy = new Busboy({ headers: req.headers });
-    busboy.on('file', function(fieldname, file, filename, encoding, mimetype) {
-      var saveTo = path.join(__dirname, path.basename(fieldname) + path.extname(filename))
-      console.log('\n\n', saveTo, '\n\n')
-      file.pipe(fs.createWriteStream(saveTo));//saveTo就是存储路径
-    })
-    busboy.on('finish', function() {
-      res.writeHead(200, { 'Connection': 'close' })
-      res.end("That's all folks!")
-    });
-    return req.pipe(busboy)
-  } else {
-    next()
-  }
-})
-
 router.get('/', (req, res) => {
   return res.render('index')
 })
@@ -48,6 +30,20 @@ router.post('/getSomeData', (req, res) => {
   return res.json({
     port: 3000
   })
+})
+
+router.post('/getImg', (req, res) => {
+  var busboy = new Busboy({ headers: req.headers });
+  busboy.on('file', function(fieldname, file, filename, encoding, mimetype) {
+    var saveTo = path.join(__dirname, path.basename(fieldname) + path.extname(filename))
+    console.log('\n\n', saveTo, '\n\n')
+    file.pipe(fs.createWriteStream(saveTo));//saveTo就是存储路径
+  })
+  busboy.on('finish', function() {
+    res.writeHead(200, { 'Connection': 'close' })
+    res.end("That's all folks!")
+  });
+  return req.pipe(busboy)
 })
 
 app.use('/', router)
