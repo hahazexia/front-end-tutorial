@@ -80,11 +80,36 @@ Connection: keep-alive
 Content-Length: 2
 Content-Type: application/json;charset=UTF-8
 Cookie: _ga=GA1.1.1821137291.1548063854
-Host: localhost:3005
-Origin: http://localhost:3005
-Referer: http://localhost:3005/
+Host: localhost:3000
+Origin: http://localhost:3000
+Referer: http://localhost:3000/
 User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/71.0.3578.98 Safari/537.36
 ```
+* Accept：用户代理期望的 MIME 类型列表
+* Accept-Encoding：列出用户代理支持的压缩方法
+* Accept-Language：列出用户代理期望的页面语言
+* Connection：决定当前的事务完成后，是否会关闭网络连接。如果该值是“keep-alive”，网络连接就是持久的，不会关闭，使得对同一个服务器的请求可以继续在该连接上完成
+* Content-Length：实体消息首部，用来指明发送给接收方的消息主体的大小，即用十进制数字表示的八位元组的数目
+* Content-Type：指示服务器文档的 MIME 类型。帮助用户代理（浏览器）去处理接收到的数据
+* Cookie：先前由服务器通过 Set-Cookie  首部投放并存储到客户端的 HTTP cookies
+* Host：指明了服务器的域名（对于虚拟主机来说），以及（可选的）服务器监听的 TCP 端口号。HTTP/1.1 的所有请求报文中必须包含一个Host 头字段
+* Origin：表明该请求来源于哪个域
+* Referer：包含了当前请求页面的来源页面的地址
+* User-Agent：包含了一个特征字符串，用来让网络协议的对端来识别发起请求的用户代理软件的应用类型、操作系统、软件开发商以及版本号
+
+下面是响应头的例子：
+
+```
+Connection: keep-alive
+Content-Length: 13
+Content-Type: application/json; charset=utf-8
+Date: Thu, 24 Jan 2019 02:58:44 GMT
+ETag: W/"d-5EFSD0nS4/TIzTt4PzKuAbjnr0M"
+X-Powered-By: Express
+```
+* Date：通用首部，其中包含了报文创建的日期和时间
+* ETag：资源的特定版本的标识符，这可以让缓存更高效，并节省带宽。如果内容没有改变，Web服务器不需要发送完整的响应；如果内容发生了变化，使用ETag有助于防止资源的同时更新相互覆盖（“空中碰撞”）
+* X-Powered-By：显示当前后台程序使用什么语言和框架
 
 HTTP Headers 种类特别多，请查看 MDN 文档寻找详细信息[HTTP Headers MDN](https://developer.mozilla.org/zh-CN/docs/Web/HTTP/Headers)。
 
