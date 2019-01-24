@@ -386,3 +386,4 @@ app.listen(3000, () => {
 * [CORS MDN](https://developer.mozilla.org/zh-CN/docs/Web/HTTP/Access_control_CORS)
 * [HTTP Headers MDN](https://developer.mozilla.org/zh-CN/docs/Web/HTTP/Headers)
 * [HTTP Documentation](https://httpwg.org/specs/)
+* [HTTP/2 is the future of the Web, and it is here!](https://http2.akamai.com/demo)
