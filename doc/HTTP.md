@@ -199,6 +199,8 @@ CORS请求失败会产生错误，但是为了安全，在JavaScript代码层面
 
 #### CORS 示例
 
+本示例请查看[这里的源代码](../example/HTTP/CORS)。
+
 下面使用一个例子来解释 CORS 的工作原理。这个例子使用 XMLHttpRequest 对象。
 
 ```html
@@ -356,3 +358,4 @@ app.listen(3000, () => {
 
 * [CORS MDN](https://developer.mozilla.org/zh-CN/docs/Web/HTTP/Access_control_CORS)
 * [HTTP Headers MDN](https://developer.mozilla.org/zh-CN/docs/Web/HTTP/Headers)
+* [HTTP Documentation](https://httpwg.org/specs/)
